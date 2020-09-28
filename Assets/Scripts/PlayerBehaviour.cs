@@ -4,14 +4,31 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    private Rigidbody rb;
+    
+    [Header("Movement attributes")]
+    [SerializeField]
+    [Range(1,50)]
+    [Tooltip("Speed at which the character moves while walking")]
+    private float walkSpeed=10;
 
-    public float walkSpeed;
-    public float runSpeed;
-    public float rotSpeed;
+    [SerializeField]
+    [Range(1, 50)]
+    [Tooltip("Speed at which the character moves while running")]
+    private float runSpeed=10;
+
+    [SerializeField]
+    [Range(1, 50)]
+    [Tooltip("Speed at which the character rotates")]
+    public float rotSpeed=1;
+
+    [SerializeField]
+    [Range(1, 50)]
+    [Tooltip("Speed at which the character jumps")]
     public float jumpSpeed = 20;
-    public float jumpHeight = 10;
 
+
+    //private variables
+    private Rigidbody rb;
     private bool running = false;
     private bool jumping;
     private bool grounded;
@@ -53,7 +70,7 @@ public class PlayerBehaviour : MonoBehaviour
             while (secondsLeft > 0)
             {
                 secondsLeft -= Time.deltaTime;
-                rb.AddForce(new Vector3(0, 7, 0), ForceMode.Acceleration);
+                rb.AddForce(new Vector3(0,2,0)*jumpSpeed, ForceMode.Acceleration);
             }
             jumping = !jumping;
             secondsLeft = 0.5f;
@@ -66,22 +83,4 @@ public class PlayerBehaviour : MonoBehaviour
 
    
 
-    IEnumerator Jump()
-    {
-        while (true)
-        {
-            if (transform.position.y >= jumpHeight)
-                jumping = false;
-            if (jumping)
-                rb.MovePosition(transform.up * jumpSpeed * Time.smoothDeltaTime);
-            else if (!jumping)
-            {
-                rb.MovePosition( Vector3.Lerp(transform.position, groundPos, 10* Time.smoothDeltaTime));
-                if (transform.position == groundPos)
-                    StopAllCoroutines();
-            }
-
-            yield return new WaitForEndOfFrame();
-        }
-    }
 }
