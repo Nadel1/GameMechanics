@@ -128,9 +128,15 @@ public class PlayerBehaviour : MonoBehaviour
     {
         rotSpeed = currentState.Equals(State.Running) ? rotSpeedRun : rotSpeedWalk;
 
-        rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxis("Mouse X"), 0f));
-    }
+        Quaternion rot= Quaternion.Slerp(rb.rotation,Quaternion.Euler(rb.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxis("Mouse X"), 0f)),0.5f);
+       if (!(rot.eulerAngles.y > 30 && rot.eulerAngles.y < 330))
+        {
+            rb.rotation = rot;
+        }
+        //rb.rotation = rot;
 
+    }
+    /*
     private void Update()
     
     {
@@ -168,5 +174,5 @@ public class PlayerBehaviour : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
         }
-    }
+    }*/
 }

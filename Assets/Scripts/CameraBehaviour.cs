@@ -6,17 +6,11 @@ public class CameraBehaviour : MonoBehaviour
 {
 
     public Transform cameraPoint;
-    // Start is called before the first frame update
-    void Start()
+    public Transform rotateAround;
+    void FixedUpdate()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        transform.position = Vector3.Slerp(transform.position, cameraPoint.position, 0.5f);
-        transform.LookAt(cameraPoint.position);
-        transform.rotation = Quaternion.Euler(cameraPoint.rotation.eulerAngles.x, cameraPoint.rotation.eulerAngles.y, 0);
+        transform.position = Vector3.Slerp(transform.position, cameraPoint.position,0.3f);
+        transform.LookAt(rotateAround.position);
+        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
     }
 }
