@@ -672,6 +672,7 @@ MonoBehaviour:
   rotSpeedWalk: 5
   rotSpeedRun: 2
   jumpSpeed: 2
+  grappleSpeed: 5
   currentState: 0
 --- !u!136 &1037142162
 CapsuleCollider:
@@ -805,7 +806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0976cf57fcac17248a7282997a1a66bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotSpeed: 1
+  rotSpeed: 0.25
   rotateAround: {fileID: 1029516385}
 --- !u!1 &2075001102
 GameObject:

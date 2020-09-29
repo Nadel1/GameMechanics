@@ -31,13 +31,16 @@ public class PlayerBehaviour : MonoBehaviour
     [Tooltip("Speed at which the character jumps")]
     private float jumpSpeed = 20;
 
-    [SerializeField]
-    private enum State { Idle,Walking,Running,Jumping};
+    [Space(20)]
+    public float grappleSpeed;
 
-    [SerializeField]
-    private State currentState = State.Idle;
+    public enum State { Idle,Walking,Running,Jumping};
+
+    [Space(20)]
+    public State currentState = State.Idle;
 
     //private variables
+    
     private Rigidbody rb;
     private bool jumping;
     private Vector3 moveDir=new Vector3(0,0,0);
@@ -47,9 +50,15 @@ public class PlayerBehaviour : MonoBehaviour
 
     private float rotSpeed;
     private float secondsLeft = 0.5f;
+
+    private Camera cam;
+    private RaycastHit grapplePoint;
+    private bool isGrappling;
+    private float distance;
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -59,6 +68,7 @@ public class PlayerBehaviour : MonoBehaviour
         CheckInput();
         Jumping();
         Turn();
+
     }
 
 
@@ -121,4 +131,42 @@ public class PlayerBehaviour : MonoBehaviour
         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxis("Mouse X"), 0f));
     }
 
+    private void Update()
+    
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if(Input.GetKeyDown(KeyCode.Mouse0)&&Physics.Raycast(ray,out grapplePoint))
+        {
+            isGrappling = true;
+            Vector3 grappleDirection = (grapplePoint.point - transform.position);
+            rb.velocity = grappleDirection.normalized * grappleSpeed;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+            isGrappling = false;
+
+        if (isGrappling)
+        {
+            transform.LookAt(grapplePoint.point);
+
+            Vector3 grappleDirection = (grapplePoint.point - transform.position);
+
+            if (distance < grappleDirection.magnitude)
+            {
+                float velocity = rb.velocity.magnitude;
+                Vector3 newDirection = Vector3.ProjectOnPlane(rb.velocity, grappleDirection);
+
+                rb.velocity = newDirection.normalized * velocity;
+            }
+            else
+            {
+                rb.AddForce(grappleDirection.normalized * grappleSpeed);
+                distance = grappleDirection.magnitude;
+            }
+        }
+        else
+        {
+            transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+        }
+    }
 }

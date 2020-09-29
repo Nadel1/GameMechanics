@@ -15,7 +15,8 @@ public class CameraBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, cameraPoint.position, 0.5f);
+        transform.position = Vector3.Slerp(transform.position, cameraPoint.position, 0.5f);
+        transform.LookAt(cameraPoint.position);
         transform.rotation = Quaternion.Euler(cameraPoint.rotation.eulerAngles.x, cameraPoint.rotation.eulerAngles.y, 0);
     }
 }
