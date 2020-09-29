@@ -18,8 +18,13 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField]
     [Range(1, 50)]
-    [Tooltip("Speed at which the character rotates")]
-    private float rotSpeed=1;
+    [Tooltip("Speed at which the character rotates while walking")]
+    private float rotSpeedWalk=5;
+
+    [SerializeField]
+    [Range(1, 50)]
+    [Tooltip("Speed at which the character rotates while running")]
+    private float rotSpeedRun = 2;
 
     [SerializeField]
     [Range(1, 50)]
@@ -37,16 +42,15 @@ public class PlayerBehaviour : MonoBehaviour
     private bool jumping;
     private Vector3 moveDir=new Vector3(0,0,0);
     private Vector3 groundPos;
-
+    private float jumpMultiplier = 1;
     private float speed;
 
+    private float rotSpeed;
     private float secondsLeft = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
-        
     }
 
     // Update is called once per frame
@@ -69,11 +73,10 @@ public class PlayerBehaviour : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
             moveDir += transform.right;
 
-        if (Input.GetKey(KeyCode.LeftShift)&&speed==walkSpeed)
+        if (Input.GetKeyDown(KeyCode.LeftShift)&&speed==walkSpeed)
             currentState = State.Running;
-        
-        if (Input.GetKey(KeyCode.LeftShift) && speed == runSpeed)
-            currentState = State.Walking;
+        if (Input.GetKeyUp(KeyCode.LeftShift) && speed == runSpeed)
+                currentState = State.Walking;
         
 
         speed = currentState.Equals(State.Running) ? runSpeed : walkSpeed;
@@ -94,10 +97,16 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (jumping)
         {
+            if (currentState.Equals(State.Running))
+                jumpMultiplier = 2f;
+            else
+                jumpMultiplier = 1f;
+
+
             while (secondsLeft > 0)
             {
                 secondsLeft -= Time.deltaTime;
-                rb.AddForce(new Vector3(0, 2, 0) * jumpSpeed, ForceMode.Acceleration);
+                rb.AddForce(new Vector3(0, 2*jumpMultiplier, 0) * jumpSpeed, ForceMode.Acceleration);
             }
             jumping = !jumping;
             secondsLeft = 0.5f;
@@ -107,6 +116,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Turn()
     {
+        rotSpeed = currentState.Equals(State.Running) ? rotSpeedRun : rotSpeedWalk;
+
         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxis("Mouse X"), 0f));
     }
 
