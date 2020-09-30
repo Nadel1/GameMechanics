@@ -67,8 +67,12 @@ public class PlayerBehaviour : MonoBehaviour
     {
         CheckInput();
         Jumping();
+        rotSpeed = currentState.Equals(State.Running) ? rotSpeedRun : rotSpeedWalk;
 
-        Turn();
+        Quaternion rot= Quaternion.Slerp(transform.rotation,Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)),0.9f);
+        //transform.rotation = rot;
+        rb.MoveRotation(rot);
+       //transform.Rotate(0, Input.GetAxis("Mouse X") * rotSpeed * Time.fixedDeltaTime, 0);
 
     }
 
@@ -135,48 +139,48 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Turn()
     {
-        rotSpeed = currentState.Equals(State.Running) ? rotSpeedRun : rotSpeedWalk;
-
-        Quaternion rot= Quaternion.Slerp(transform.rotation,Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)),0.6f);
-        transform.rotation = rot;
+        
     }
-    /*
-    private void Update()
-    
-    {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if(Input.GetKeyDown(KeyCode.Mouse0)&&Physics.Raycast(ray,out grapplePoint))
-        {
-            isGrappling = true;
-            Vector3 grappleDirection = (grapplePoint.point - transform.position);
-            rb.velocity = grappleDirection.normalized * grappleSpeed;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-            isGrappling = false;
-
-        if (isGrappling)
-        {
-            transform.LookAt(grapplePoint.point);
-
-            Vector3 grappleDirection = (grapplePoint.point - transform.position);
-
-            if (distance < grappleDirection.magnitude)
-            {
-                float velocity = rb.velocity.magnitude;
-                Vector3 newDirection = Vector3.ProjectOnPlane(rb.velocity, grappleDirection);
-
-                rb.velocity = newDirection.normalized * velocity;
-            }
-            else
-            {
-                rb.AddForce(grappleDirection.normalized * grappleSpeed);
-                distance = grappleDirection.magnitude;
-            }
-        }
-        else
-        {
-            transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
-        }
-    }*/
+   
 }
+
+
+/*
+   private void Update()
+
+   {
+       Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+       if(Input.GetKeyDown(KeyCode.Mouse0)&&Physics.Raycast(ray,out grapplePoint))
+       {
+           isGrappling = true;
+           Vector3 grappleDirection = (grapplePoint.point - transform.position);
+           rb.velocity = grappleDirection.normalized * grappleSpeed;
+       }
+
+       if (Input.GetKeyUp(KeyCode.Mouse0))
+           isGrappling = false;
+
+       if (isGrappling)
+       {
+           transform.LookAt(grapplePoint.point);
+
+           Vector3 grappleDirection = (grapplePoint.point - transform.position);
+
+           if (distance < grappleDirection.magnitude)
+           {
+               float velocity = rb.velocity.magnitude;
+               Vector3 newDirection = Vector3.ProjectOnPlane(rb.velocity, grappleDirection);
+
+               rb.velocity = newDirection.normalized * velocity;
+           }
+           else
+           {
+               rb.AddForce(grappleDirection.normalized * grappleSpeed);
+               distance = grappleDirection.magnitude;
+           }
+       }
+       else
+       {
+           transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+       }
+   }*/
