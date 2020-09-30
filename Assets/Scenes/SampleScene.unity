@@ -406,7 +406,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163488859}
-  m_LocalRotation: {x: 0.14212792, y: 0.000000008515856, z: -0.0000000012227538, w: 0.9898483}
+  m_LocalRotation: {x: 0.14212792, y: -0.00000000851585, z: 0.0000000012227531, w: 0.9898483}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -695,7 +695,7 @@ MonoBehaviour:
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
     m_InputAxisValue: 0
-    m_InvertInput: 0
+    m_InvertInput: 1
     m_MinValue: 0
     m_MaxValue: 1
     m_Wrap: 0
@@ -944,24 +944,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46cf0b4e9d6261147b921b93abf9fd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 10
-  rotSpeedWalk: 5
-  rotSpeedRun: 2
-  jumpSpeed: 20
-  grappleSpeed: 0
-  currentState: 0
-  controller: {fileID: 607730895}
-  speed: 6
-  turnSmoothTime: 0.1
-  cam: {fileID: 963194228}
-  gravity: -19.62
-  groundCheck: {fileID: 1959562852}
-  groundDistance: 0.4
+  turnSmoothTime: 0.2
+  gravity: -20
+  groundDistance: 0.5
   groundMask:
     serializedVersion: 2
     m_Bits: 256
-  jumpHeight: 3
+  groundCheck: {fileID: 1959562852}
+  walkSpeed: 5
+  runSpeed: 10
+  maxJump: 3
+  jumpsAllowed: 2
 --- !u!136 &607730897
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -973,7 +966,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &607730898
@@ -1408,7 +1401,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.13673836, y: 0.000000014488052, z: -0.0000000019998565, w: 0.99060726}
+  m_LocalRotation: {x: 0.13673836, y: -0.00000001448805, z: 0.0000000019998565, w: 0.99060726}
   m_LocalPosition: {x: 0, y: 3.6882, z: -7.7084002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1545,7 +1538,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752468703}
-  m_LocalRotation: {x: 0.12414725, y: 0.0000000042683173, z: -5.340313e-10, w: 0.9922638}
+  m_LocalRotation: {x: 0.12414725, y: -0.000000004268317, z: 5.3403126e-10, w: 0.9922638}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1657,7 +1650,7 @@ GameObject:
   - component: {fileID: 1959562852}
   m_Layer: 0
   m_Name: GroundCheck
-  m_TagString: Untagged
+  m_TagString: GroundCheck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1670,7 +1663,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959562851}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.98, z: 0}
+  m_LocalPosition: {x: 0, y: -1.017, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 607730900}

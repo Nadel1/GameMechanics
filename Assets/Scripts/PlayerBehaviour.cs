@@ -5,6 +5,31 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
 
+    [Header("Phyiscs attributes")]
+    [SerializeField]
+    [Tooltip("Used in order to smoothen the turn of the character")]
+    [Range(0, 1)]
+    private float turnSmoothTime = 0.1f;
+
+
+
+    [SerializeField]
+    [Tooltip("Gravitational force that will be applied")]
+    private float gravity = -9.81f;
+
+    [SerializeField]
+    [Tooltip("Distance between ground and bottom of player")]
+    private float groundDistance = 0.4f;
+
+    [SerializeField]
+    [Tooltip("All objects on this layer will be seen as ground objects")]
+    public LayerMask groundMask;
+
+    [SerializeField]
+    [Tooltip("holder of the groundcheck object which checks wether or not the character is grounded")]
+    private Transform groundCheck;
+
+
     [Header("Movement attributes")]
     [SerializeField]
     [Range(1, 50)]
@@ -16,86 +41,98 @@ public class PlayerBehaviour : MonoBehaviour
     [Tooltip("Speed at which the character moves while running")]
     private float runSpeed = 10;
 
-    [SerializeField]
-    [Range(1, 50)]
-    [Tooltip("Speed at which the character rotates while walking")]
-    private float rotSpeedWalk = 5;
-
-    [SerializeField]
-    [Range(1, 50)]
-    [Tooltip("Speed at which the character rotates while running")]
-    private float rotSpeedRun = 2;
 
     [SerializeField]
     [Range(1, 50)]
     [Tooltip("Speed at which the character jumps")]
-    private float jumpSpeed = 20;
+    private float maxJump = 3;
 
-    [Space(20)]
-    public float grappleSpeed;
 
-    public enum State { Idle, Walking, Running, Jumping };
 
-    [Space(20)]
-    public State currentState = State.Idle;
-
-    //private variables
-
-    //private Rigidbody rb;
-
-    public CharacterController controller;
-    public float speed;
-    public float turnSmoothTime = 0.1f;
-    float turnSmoothVelocity;
-    public Transform cam;
+    public int jumpsAllowed = 2;
+    private int currentJumps;
     
- 
-    public float gravity = -9.81f;
-    Vector3 velocity;
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
+    //holds the character contorller
+    private CharacterController controller;
 
-    public LayerMask groundMask;
-    public float jumpHeight = 3;
+    //holds wether or not the character is touching the ground, used for jumping
+    private bool isGrounded;
 
-    bool isGrounded;
+    //holder of the velocity applied due to gravity
+    private Vector3 velocity;
+
+    //internal variable for speed as the movement speed changes between walking and running
+    private float speed;
+
+    //internal physics variable which determines how smoothly the character will be turned
+    private float turnSmoothVelocity;
+
+    //holder of the camera which is used for the rotation
+    private Transform cam;
+
+    
+
+    //internal variable for the jumpheight as it differs depending on the movement speed
+    private float jumpHeight;
+
+
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() { 
 
-        // rb = GetComponent<Rigidbody>();
-
+        //the necessary holder variables are initialised
+        controller = GetComponent<CharacterController>();
+        speed = walkSpeed;
+        cam = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        jumpHeight=maxJump;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //adjust the speeds and jump height depending on if the player is running
+        speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        jumpHeight = speed == runSpeed ? maxJump : maxJump * 0.5f;
+
+        //check wether or not the character is grounded
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
+        //restes the y-velocity in case character is grounded
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+            currentJumps = jumpsAllowed;
         }
 
+        //retrieval of input (wasd-keys)
         float hoizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
         Vector3 direction = new Vector3(hoizontal, 0, vertical).normalized;
 
+        //only move the character when the direction magnitude does not equal 0
         if (direction.magnitude >= 0.1f)
         {
+            //calculation of the angle of the character depending on the camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        //jump mechanic by increasing the y-velocity
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            if (isGrounded|| currentJumps > 0)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                currentJumps--;
+            }
+            
         }
+
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity*Time.deltaTime);
     }
