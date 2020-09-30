@@ -23,7 +23,6 @@ public class CameraPoint : MonoBehaviour
         transform.LookAt(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         float height = Mathf.Clamp(transform.position.y, 1, 2.5f);
         Vector3 newPos = new Vector3(transform.position.x, height, transform.position.z);
-        Debug.Log(height);
         /*
         if (Vector3.Distance(newPos, rotateAround.position) < 2.5f)
         {
