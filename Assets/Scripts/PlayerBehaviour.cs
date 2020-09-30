@@ -109,6 +109,7 @@ public class PlayerBehaviour : MonoBehaviour
         float h = 2 * Input.GetAxis("Mouse X");
         float v =2 * Input.GetAxis("Mouse Y");
         transform.Rotate(0, h, 0);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, Input.GetAxis("Mouse X") * rotSpeed * Time.fixedDeltaTime, 0), 0.5f);
 
        // rb.MoveRotation(Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X")*Time.fixedDeltaTime, 0f)));
         //transform.Rotate(0, Input.GetAxis("Mouse X") * rotSpeed * Time.fixedDeltaTime, 0);
