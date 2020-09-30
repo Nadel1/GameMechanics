@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.2518058, z: -7.7084002}
+  m_FollowOffset: {x: 0, y: 2.5682, z: -7.7084002}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -406,7 +406,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163488859}
-  m_LocalRotation: {x: 0.12360021, y: -0.000000017074445, z: 0.0000000021267124, w: 0.9923321}
+  m_LocalRotation: {x: 0.14212792, y: 0.000000008515856, z: -0.0000000012227538, w: 0.9898483}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -581,7 +581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.2518058, z: -7.7084002}
+  m_FollowOffset: {x: 0, y: 2.5682, z: -7.7084002}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -742,11 +742,11 @@ MonoBehaviour:
   m_BindingMode: 4
   m_SplineCurvature: 0.2
   m_Orbits:
-  - m_Height: 14
+  - m_Height: 10
     m_Radius: 6
   - m_Height: 5
     m_Radius: 8
-  - m_Height: -1.59
+  - m_Height: -2
     m_Radius: 6
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
@@ -761,7 +761,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 390220313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.3718057, z: -7.7084002}
+  m_LocalPosition: {x: 0, y: 3.6882, z: -7.7084002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 829234416}
@@ -955,6 +955,13 @@ MonoBehaviour:
   speed: 6
   turnSmoothTime: 0.1
   cam: {fileID: 963194228}
+  gravity: -19.62
+  groundCheck: {fileID: 1959562852}
+  groundDistance: 0.4
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 256
+  jumpHeight: 3
 --- !u!136 &607730897
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1028,6 +1035,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1795946382}
+  - {fileID: 1959562852}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1196,7 +1204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.2518058, z: -7.7084002}
+  m_FollowOffset: {x: 0, y: 2.5682, z: -7.7084002}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1315,8 +1323,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829234414}
-  m_LocalRotation: {x: 0.14162977, y: 1e-45, z: -0, w: 0.9899197}
-  m_LocalPosition: {x: 0, y: 0.10000014, z: 0}
+  m_LocalRotation: {x: 0.16010927, y: -0.000000008492204, z: 0.0000000013774504, w: 0.98709935}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 251456594}
@@ -1400,8 +1408,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.11819741, y: -0.000000028540343, z: 0.0000000033972085, w: 0.99299014}
-  m_LocalPosition: {x: 0, y: 3.3718057, z: -7.7084002}
+  m_LocalRotation: {x: 0.13673836, y: 0.000000014488052, z: -0.0000000019998565, w: 0.99060726}
+  m_LocalPosition: {x: 0, y: 3.6882, z: -7.7084002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1537,7 +1545,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752468703}
-  m_LocalRotation: {x: 0.10557752, y: -0.0000000042775548, z: 4.5415194e-10, w: 0.9944111}
+  m_LocalRotation: {x: 0.12414725, y: 0.0000000042683173, z: -5.340313e-10, w: 0.9922638}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1638,6 +1646,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795946381}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1959562851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1959562852}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1959562852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959562851}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.98, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 607730900}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2075001102
 GameObject:
   m_ObjectHideFlags: 0
