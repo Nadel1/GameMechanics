@@ -40,8 +40,9 @@ public class PlayerBehaviour : MonoBehaviour
     public State currentState = State.Idle;
 
     //private variables
-    
+
     private Rigidbody rb;
+
     private bool jumping;
     private Vector3 moveDir=new Vector3(0,0,0);
     private Vector3 groundPos;
@@ -60,6 +61,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cam = Camera.main;
         rb = GetComponent<Rigidbody>();
+
     }
 
     // Update is called once per frame
@@ -85,12 +87,15 @@ public class PlayerBehaviour : MonoBehaviour
         {
             rb.velocity = Vector3.zero;
         }
-        rb.MovePosition(rb.position + speed * moveDir * Time.fixedDeltaTime);
+
         if (Input.GetKeyUp(KeyCode.W) && Input.GetKeyUp(KeyCode.S) && Input.GetKeyUp(KeyCode.A) && Input.GetKeyUp(KeyCode.D))
         {
             moveDir = Vector3.zero;
             rb.velocity = Vector3.zero;
         }
+
+       rb.MovePosition(rb.position + speed * moveDir * Time.fixedDeltaTime);
+        
         if (!moveDir.Equals(Vector3.zero) && currentState != State.Idle && currentState != State.Running)
             currentState = State.Walking;
         moveDir = Vector3.zero;
@@ -99,13 +104,18 @@ public class PlayerBehaviour : MonoBehaviour
 
         Quaternion rot= Quaternion.Slerp(transform.rotation,Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)),0.6f);
         //transform.rotation = rot;
-        
-        rb.MoveRotation(Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)));
+
+
+        float h = 2 * Input.GetAxis("Mouse X");
+        float v =2 * Input.GetAxis("Mouse Y");
+        transform.Rotate(0, h, 0);
+
+       // rb.MoveRotation(Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X")*Time.fixedDeltaTime, 0f)));
         //transform.Rotate(0, Input.GetAxis("Mouse X") * rotSpeed * Time.fixedDeltaTime, 0);
 
     }
 
-
+    /*
     private void CheckInput()
     {
         if (Input.GetKey(KeyCode.W))
@@ -138,7 +148,7 @@ public class PlayerBehaviour : MonoBehaviour
             currentState = State.Walking;
         moveDir = Vector3.zero;
     }
-
+    */
     private void Jumping()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -158,7 +168,8 @@ public class PlayerBehaviour : MonoBehaviour
             while (secondsLeft > 0)
             {
                 secondsLeft -= Time.deltaTime;
-                rb.AddForce(new Vector3(0, 2*jumpMultiplier, 0) * jumpSpeed, ForceMode.Acceleration);
+                
+                //rb.AddForce(new Vector3(0, 2*jumpMultiplier, 0) * jumpSpeed, ForceMode.Acceleration);
             }
             jumping = !jumping;
             secondsLeft = 0.5f;
