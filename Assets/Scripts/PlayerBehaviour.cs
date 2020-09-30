@@ -65,14 +65,43 @@ public class PlayerBehaviour : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        CheckInput();
+        if (Input.GetKey(KeyCode.W))
+            moveDir += transform.forward;
+        if (Input.GetKey(KeyCode.S))
+            moveDir -= transform.forward;
+        if (Input.GetKey(KeyCode.A))
+            moveDir -= transform.right;
+        if (Input.GetKey(KeyCode.D))
+            moveDir += transform.right;
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && speed == walkSpeed)
+            currentState = State.Running;
+        if (Input.GetKeyUp(KeyCode.LeftShift) && speed == runSpeed)
+            currentState = State.Walking;
+
+
+        speed = currentState.Equals(State.Running) ? runSpeed : walkSpeed;
+        if (moveDir.Equals(Vector3.zero))
+        {
+            rb.velocity = Vector3.zero;
+        }
+        rb.MovePosition(rb.position + speed * moveDir * Time.fixedDeltaTime);
+        if (Input.GetKeyUp(KeyCode.W) && Input.GetKeyUp(KeyCode.S) && Input.GetKeyUp(KeyCode.A) && Input.GetKeyUp(KeyCode.D))
+        {
+            moveDir = Vector3.zero;
+            rb.velocity = Vector3.zero;
+        }
+        if (!moveDir.Equals(Vector3.zero) && currentState != State.Idle && currentState != State.Running)
+            currentState = State.Walking;
+        moveDir = Vector3.zero;
         Jumping();
         rotSpeed = currentState.Equals(State.Running) ? rotSpeedRun : rotSpeedWalk;
 
-        Quaternion rot= Quaternion.Slerp(transform.rotation,Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)),0.9f);
+        Quaternion rot= Quaternion.Slerp(transform.rotation,Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)),0.6f);
         //transform.rotation = rot;
-        rb.MoveRotation(rot);
-       //transform.Rotate(0, Input.GetAxis("Mouse X") * rotSpeed * Time.fixedDeltaTime, 0);
+        
+        rb.MoveRotation(Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)));
+        //transform.Rotate(0, Input.GetAxis("Mouse X") * rotSpeed * Time.fixedDeltaTime, 0);
 
     }
 

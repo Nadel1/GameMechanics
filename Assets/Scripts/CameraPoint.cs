@@ -20,7 +20,7 @@ public class CameraPoint : MonoBehaviour
         float angle = Input.GetAxisRaw("Mouse Y");
         //angle=Mathf.Clamp(angle, -0.5f, 0.5f);
         transform.RotateAround(rotateAround.position, new Vector3(-1, 0, 0), rotSpeed * angle);
-        transform.LookAt(rotateAround.position);
+        transform.LookAt(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         float height = Mathf.Clamp(transform.position.y, 1, 2.5f);
         Vector3 newPos = new Vector3(transform.position.x, height, transform.position.z);
         Debug.Log(height);
