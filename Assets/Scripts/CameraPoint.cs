@@ -16,20 +16,33 @@ public class CameraPoint : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float angle = Input.GetAxis("Mouse Y");
+        Vector3 oldPos = transform.position;
+        float angle = Input.GetAxisRaw("Mouse Y");
         //angle=Mathf.Clamp(angle, -0.5f, 0.5f);
         transform.RotateAround(rotateAround.position, new Vector3(-1, 0, 0), rotSpeed * angle);
-        Vector3 newPos = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, 1, 2.5f), transform.position.z);
-
+        transform.LookAt(rotateAround.position);
+        float height = Mathf.Clamp(transform.position.y, 1, 2.5f);
+        Vector3 newPos = new Vector3(transform.position.x, height, transform.position.z);
+        Debug.Log(height);
+        /*
         if (Vector3.Distance(newPos, rotateAround.position) < 2.5f)
         {
-            float yVal = newPos.y;
-            newPos=(newPos-rotateAround.position).normalized*2.5f;
-            newPos = new Vector3(newPos.x, yVal, newPos.z);
             Debug.Log(Vector3.Distance(newPos, rotateAround.position));
+            float yVal = newPos.y;
+            newPos=(newPos-rotateAround.position).normalized* 2.5f;
+            newPos = new Vector3(newPos.x, yVal, newPos.z);
+            
+        }*/
+        if(Vector3.Distance(newPos, rotateAround.position) > 2.5f)
+        {
+            transform.position = newPos;
+        }
+        else
+        {
+            transform.position = oldPos;
         }
 
-        transform.position = newPos;
+        
 
     }
 }

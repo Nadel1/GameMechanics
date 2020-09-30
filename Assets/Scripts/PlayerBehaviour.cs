@@ -67,6 +67,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         CheckInput();
         Jumping();
+
         Turn();
 
     }
@@ -87,11 +88,19 @@ public class PlayerBehaviour : MonoBehaviour
             currentState = State.Running;
         if (Input.GetKeyUp(KeyCode.LeftShift) && speed == runSpeed)
                 currentState = State.Walking;
-        
 
+        
         speed = currentState.Equals(State.Running) ? runSpeed : walkSpeed;
-        Debug.Log(speed);
-        rb.MovePosition(transform.position + speed* moveDir * Time.fixedDeltaTime);
+        if (moveDir.Equals(Vector3.zero))
+        {
+            rb.velocity = Vector3.zero;
+        }
+        rb.MovePosition(rb.position + speed* moveDir * Time.fixedDeltaTime);
+        if (Input.GetKeyUp(KeyCode.W) && Input.GetKeyUp(KeyCode.S) && Input.GetKeyUp(KeyCode.A) && Input.GetKeyUp(KeyCode.D))
+        {
+            moveDir = Vector3.zero;
+            rb.velocity = Vector3.zero;
+        }
         if (!moveDir.Equals(Vector3.zero) && currentState != State.Idle && currentState != State.Running)
             currentState = State.Walking;
         moveDir = Vector3.zero;
@@ -128,13 +137,8 @@ public class PlayerBehaviour : MonoBehaviour
     {
         rotSpeed = currentState.Equals(State.Running) ? rotSpeedRun : rotSpeedWalk;
 
-        Quaternion rot= Quaternion.Slerp(rb.rotation,Quaternion.Euler(rb.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxis("Mouse X"), 0f)),0.5f);
-       if (!(rot.eulerAngles.y > 30 && rot.eulerAngles.y < 330))
-        {
-            rb.rotation = rot;
-        }
-        //rb.rotation = rot;
-
+        Quaternion rot= Quaternion.Slerp(transform.rotation,Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, rotSpeed * Input.GetAxisRaw("Mouse X"), 0f)),0.6f);
+        transform.rotation = rot;
     }
     /*
     private void Update()
