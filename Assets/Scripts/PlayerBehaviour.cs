@@ -48,8 +48,26 @@ public class PlayerBehaviour : MonoBehaviour
     private float maxJump = 3;
 
 
+    [SerializeField]
+    [Tooltip("Maximum amount of jumps the player can execute without touching the floor")]
+    private int jumpsAllowed = 2;
 
-    public int jumpsAllowed = 2;
+    public GameObject hookHolder;
+
+    public GameObject hook;
+
+    public float hookTravelSpeed;
+    public float playerTravelSpeed;
+    public static bool fired;
+    public bool hooked;
+
+    public float maxDistance;
+    private float currentDistance;
+
+    //internal variable that holds gravity amount since gravity gets disabled during the hooking
+    private float restoreGrav;
+
+    //internal variable that holds how many jumps the player is still allowed to execute
     private int currentJumps;
     
     //holds the character contorller
@@ -84,6 +102,7 @@ public class PlayerBehaviour : MonoBehaviour
         speed = walkSpeed;
         cam = GameObject.FindGameObjectWithTag("MainCamera").transform;
         jumpHeight=maxJump;
+        restoreGrav = gravity;
     }
 
     // Update is called once per frame
@@ -109,18 +128,20 @@ public class PlayerBehaviour : MonoBehaviour
 
         Vector3 direction = new Vector3(hoizontal, 0, vertical).normalized;
 
+        //calculation of the angle of the character depending on the camera
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
         //only move the character when the direction magnitude does not equal 0
         if (direction.magnitude >= 0.1f)
         {
-            //calculation of the angle of the character depending on the camera
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
+
+       
+        
 
         //jump mechanic by increasing the y-velocity
         if (Input.GetKeyDown(KeyCode.Space))
@@ -132,8 +153,57 @@ public class PlayerBehaviour : MonoBehaviour
             }
             
         }
+   
 
+
+        if (Input.GetMouseButtonDown(0) && !fired)
+        {
+            fired = true;
+
+            Debug.DrawRay(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.red, 50, false);
+        }
+
+
+        if (fired&&!hooked)
+        {
+            //hook.transform.Translate(-Vector3.forward * Time.deltaTime * hookTravelSpeed);
+            Vector3 moveTo=(Camera.main.ScreenToWorldPoint(Input.mousePosition)-hookHolder.transform.position).normalized;
+            hook.transform.Translate(-(Camera.main.ScreenToWorldPoint(Input.mousePosition).normalized) * hookTravelSpeed);
+            currentDistance = Vector3.Distance(transform.position, hook.transform.position);
+            if (currentDistance >= maxDistance)
+                ReturnHook();
+        }
+
+        if (hooked)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, hook.transform.position, playerTravelSpeed);
+            float distanceToHook = Vector3.Distance(transform.position, hook.transform.position);
+
+            gravity = 0;
+
+            if (distanceToHook < 1)
+                ReturnHook();
+        }
+        else
+        {
+            gravity = restoreGrav;
+        }
+
+        //apply gravity and movement of player
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity*Time.deltaTime);
+    }
+
+    private void ReturnHook()
+    {
+        hook.transform.position = hookHolder.transform.position;
+        fired = false;
+        hooked = false;
+    }
+
+    private void MoveHook()
+    {
+        //hook.transform.Translate(-Vector3.forward * Time.deltaTime * hookTravelSpeed);
+        hook.GetComponent<Rigidbody>().velocity = Vector3.forward * hookTravelSpeed;
     }
 }
