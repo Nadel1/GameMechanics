@@ -93,6 +93,7 @@ public class PlayerBehaviour : MonoBehaviour
     //internal variable for the jumpheight as it differs depending on the movement speed
     private float jumpHeight;
 
+    private Vector3 moveTo = Vector3.zero;
 
     // Start is called before the first frame update
     void Start() { 
@@ -153,22 +154,28 @@ public class PlayerBehaviour : MonoBehaviour
             }
             
         }
-   
 
+        
 
         if (Input.GetMouseButtonDown(0) && !fired)
         {
             fired = true;
 
-            Debug.DrawRay(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.red, 50, false);
+            RaycastHit hitInfo = new RaycastHit();
+            bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
+            if (hit && hitInfo.transform.gameObject.tag == "Hookable")
+            {
+                Debug.DrawRay(hookHolder.transform.position, hitInfo.point, Color.red, 50, false);
+                moveTo = (hitInfo.point- hookHolder.transform.position).normalized;
+            }
         }
 
 
         if (fired&&!hooked)
         {
             //hook.transform.Translate(-Vector3.forward * Time.deltaTime * hookTravelSpeed);
-            Vector3 moveTo=(Camera.main.ScreenToWorldPoint(Input.mousePosition)-hookHolder.transform.position).normalized;
-            hook.transform.Translate(-(Camera.main.ScreenToWorldPoint(Input.mousePosition).normalized) * hookTravelSpeed);
+            
+            hook.transform.Translate(moveTo*Time.deltaTime* hookTravelSpeed);
             currentDistance = Vector3.Distance(transform.position, hook.transform.position);
             if (currentDistance >= maxDistance)
                 ReturnHook();
@@ -199,6 +206,7 @@ public class PlayerBehaviour : MonoBehaviour
         hook.transform.position = hookHolder.transform.position;
         fired = false;
         hooked = false;
+        moveTo = Vector3.zero;
     }
 
     private void MoveHook()
