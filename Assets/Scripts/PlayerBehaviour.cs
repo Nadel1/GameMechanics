@@ -52,6 +52,8 @@ public class PlayerBehaviour : MonoBehaviour
     [Tooltip("Maximum amount of jumps the player can execute without touching the floor")]
     private int jumpsAllowed = 2;
 
+
+    public GameObject cinemachine;
     public GameObject hookHolder;
 
     public GameObject hook;
@@ -60,6 +62,7 @@ public class PlayerBehaviour : MonoBehaviour
     public float playerTravelSpeed;
     public static bool fired;
     public bool hooked;
+    public GameObject hookedObj;
 
     public float maxDistance;
     private float currentDistance;
@@ -154,18 +157,28 @@ public class PlayerBehaviour : MonoBehaviour
             }
             
         }
-
-        
+        Debug.Log(Input.mousePosition);
 
         if (Input.GetMouseButtonDown(0) && !fired)
         {
-            fired = true;
 
+
+
+            fired = true;
             RaycastHit hitInfo = new RaycastHit();
+
+
+            Vector3 mousePos = new Vector3(Input.mousePosition.x, 0, Input.mousePosition.y);
             bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
+            
+            Debug.DrawRay(hookHolder.transform.position, cinemachine.transform.forward.normalized,Color.red,50,false);
+           // Ray ray = new Ray(hookHolder.transform.position, direction.normalized);
+            //bool hit = Physics.Raycast(new Ray(hookHolder.transform.position, Can.normalized), out hitInfo);
+            
+            //Debug.DrawRay(hookHolder.transform.position, hitInfo.point, Color.red, 50, false);
             if (hit && hitInfo.transform.gameObject.tag == "Hookable")
             {
-                Debug.DrawRay(hookHolder.transform.position, hitInfo.point, Color.red, 50, false);
+               // Debug.DrawRay(hookHolder.transform.position, hitInfo.point, Color.red, 50, false);
                 moveTo = (hitInfo.point- hookHolder.transform.position).normalized;
             }
         }
@@ -183,17 +196,19 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (hooked)
         {
-
+            hook.transform.parent = hookedObj.transform;
             controller.Move(hook.transform.position.normalized * playerTravelSpeed * Time.deltaTime);
             float distanceToHook = Vector3.Distance(transform.position, hook.transform.position);
 
+            Debug.Log(distanceToHook);
             gravity = 0;
 
-            if (distanceToHook < 1)
+            if (distanceToHook < 2)
                 ReturnHook();
         }
         else
         {
+            hook.transform.parent = hookHolder.transform;
             gravity = restoreGrav;
         }
 

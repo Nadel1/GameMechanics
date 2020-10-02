@@ -11,6 +11,7 @@ public class HookDetector : MonoBehaviour
         if (other.tag == "Hookable")
         {
             player.GetComponent<PlayerBehaviour>().hooked = true;
+            player.GetComponent<PlayerBehaviour>().hookedObj = other.gameObject;
         }
     }
 }
