@@ -23,7 +23,6 @@ public class CharacterJumping : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Debug.Log(isGrounded());
         if (Input.GetKeyDown(KeyCode.Space))
         {
             while (secondsLeft > 0)

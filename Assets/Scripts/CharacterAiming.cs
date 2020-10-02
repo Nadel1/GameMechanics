@@ -15,6 +15,11 @@ public class CharacterAiming : MonoBehaviour
     public Rig aimLayer;
 
     public RaycastWeapon weapon;
+
+    public bool hooked;
+    public Transform Hook;
+
+    float currentDistance;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +33,20 @@ public class CharacterAiming : MonoBehaviour
     {
         float yawCamera = mainCamera.transform.rotation.eulerAngles.y;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera, 0), turnSpeed * Time.fixedDeltaTime);
+
+        if (hooked)
+        {
+            currentDistance = Vector3.Distance(transform.position, Hook.position);
+            if (currentDistance > 1)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position, Time.fixedDeltaTime * 10);
+               // GetComponent<Rigidbody>().AddForce((Hook.transform.position - transform.position).normalized * 100, ForceMode.Acceleration);
+            }
+            else
+            {
+                weapon.ReturnHook();
+            }
+        }
     }
 
     private void LateUpdate()
@@ -41,13 +60,13 @@ public class CharacterAiming : MonoBehaviour
             aimLayer.weight -= Time.deltaTime / aimDuration;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             weapon.StartFiring();
         }
-        if (!Input.GetMouseButton(0))
+        if (!Input.GetMouseButtonDown(0))
         {
-            weapon.StopFiring();
+           // weapon.StopFiring();
         }
     }
 }

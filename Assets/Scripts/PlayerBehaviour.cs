@@ -197,6 +197,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (hooked)
         {
             hook.transform.parent = hookedObj.transform;
+            transform.position = Vector3.MoveTowards(transform.position, hook.transform.position, Time.fixedDeltaTime * 10);
             controller.Move(hook.transform.position.normalized * playerTravelSpeed * Time.deltaTime);
             float distanceToHook = Vector3.Distance(transform.position, hook.transform.position);
 

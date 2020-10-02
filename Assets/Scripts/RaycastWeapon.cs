@@ -10,11 +10,18 @@ public class RaycastWeapon : MonoBehaviour
     public Transform raycastOrigin;
     public Transform raycastDest;
 
+    public Transform Hook;
+    public CharacterAiming aiming;
+    public Transform hookOrigin;
 
+    private GameObject hookedObj;
     Ray ray;
     RaycastHit hitInfo;
 
-
+    private void Start()
+    {
+        Hook.position = hookOrigin.position;
+    }
     public void StartFiring()
     {
         isFiring = true;
@@ -28,12 +35,25 @@ public class RaycastWeapon : MonoBehaviour
             hitEffect.transform.position = hitInfo.point;
             hitEffect.transform.forward = hitInfo.normal;
             hitEffect.Emit(1);
+            Hook.transform.position = hitInfo.point;
+            hookedObj = hitInfo.transform.gameObject;
+            Hook.transform.parent = hookedObj.transform;
+            aiming.hooked = true;
+            isFiring = false;
         }
             
     }
 
     public void StopFiring()
     {
-        isFiring = false;
+        
+        aiming.hooked = false;
+    }
+
+    public void ReturnHook()
+    {
+        aiming.hooked = false;
+        Hook.position = hookOrigin.position;
+        Hook.transform.parent = gameObject.transform;
     }
 }
