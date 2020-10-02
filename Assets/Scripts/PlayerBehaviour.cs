@@ -183,7 +183,8 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (hooked)
         {
-            transform.position = Vector3.MoveTowards(transform.position, hook.transform.position, playerTravelSpeed);
+
+            controller.Move(hook.transform.position.normalized * playerTravelSpeed * Time.deltaTime);
             float distanceToHook = Vector3.Distance(transform.position, hook.transform.position);
 
             gravity = 0;
