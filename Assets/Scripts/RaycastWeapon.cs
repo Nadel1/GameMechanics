@@ -46,7 +46,6 @@ public class RaycastWeapon : MonoBehaviour
 
     public void StopFiring()
     {
-        
         aiming.hooked = false;
     }
 

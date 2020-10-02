@@ -20,35 +20,64 @@ public class CharacterAiming : MonoBehaviour
     public Transform Hook;
 
     float currentDistance;
+
+    private float distToGround;
+
+    private LineRenderer lr;
+
     // Start is called before the first frame update
     void Start()
     {
         mainCamera = Camera.main;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        distToGround = GetComponent<Collider>().bounds.extents.y;
+        lr = Hook.GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        
         float yawCamera = mainCamera.transform.rotation.eulerAngles.y;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera, 0), turnSpeed * Time.fixedDeltaTime);
 
         if (hooked)
         {
+            aimLayer.weight = 1;
+            
+            lr.SetVertexCount(2);
+            lr.SetPosition(0, weapon.hookOrigin.transform.position);
+            lr.SetPosition(1, Hook.transform.position);
             currentDistance = Vector3.Distance(transform.position, Hook.position);
-            if (currentDistance > 1)
+            transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position, Time.fixedDeltaTime * 10);
+            GetComponent<Rigidbody>().useGravity = false;
+            if (currentDistance < 1)
             {
-                transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position, Time.fixedDeltaTime * 10);
-               // GetComponent<Rigidbody>().AddForce((Hook.transform.position - transform.position).normalized * 100, ForceMode.Acceleration);
-            }
-            else
-            {
+                if (!isGrounded())
+                {
+                    
+                   
+                    StartCoroutine(Climb());
+                }
+                
                 weapon.ReturnHook();
             }
         }
+        else
+        {
+            GetComponent<Rigidbody>().useGravity = true;
+            lr.SetVertexCount(0);
+        }
     }
 
+    IEnumerator Climb()
+    {
+        transform.Translate(Vector3.up * Time.fixedDeltaTime * 100f);
+       
+        yield return new WaitForSeconds(0.1f);
+        transform.Translate(Vector3.forward * Time.fixedDeltaTime * 50f);
+    }
     private void LateUpdate()
     {
         if (Input.GetMouseButton(1))
@@ -66,7 +95,11 @@ public class CharacterAiming : MonoBehaviour
         }
         if (!Input.GetMouseButtonDown(0))
         {
-           // weapon.StopFiring();
+           
         }
+    }
+    private bool isGrounded()
+    {
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 1f);
     }
 }
