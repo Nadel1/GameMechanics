@@ -14,6 +14,7 @@ public class CharacterAiming : MonoBehaviour
 
     public Rig aimLayer;
 
+    public RaycastWeapon weapon;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +30,7 @@ public class CharacterAiming : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera, 0), turnSpeed * Time.fixedDeltaTime);
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (Input.GetMouseButton(1))
         {
@@ -38,6 +39,15 @@ public class CharacterAiming : MonoBehaviour
         else
         {
             aimLayer.weight -= Time.deltaTime / aimDuration;
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            weapon.StartFiring();
+        }
+        if (!Input.GetMouseButton(0))
+        {
+            weapon.StopFiring();
         }
     }
 }
