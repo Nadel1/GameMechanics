@@ -54,12 +54,6 @@ public class CharacterAiming : MonoBehaviour
             GetComponent<Rigidbody>().useGravity = false;
             if (currentDistance < 1)
             {
-                if (!isGrounded())
-                {
-                    
-                   
-                    StartCoroutine(Climb());
-                }
                 
                 weapon.ReturnHook();
             }
@@ -71,13 +65,6 @@ public class CharacterAiming : MonoBehaviour
         }
     }
 
-    IEnumerator Climb()
-    {
-        transform.Translate(Vector3.up * Time.fixedDeltaTime * 100f);
-       
-        yield return new WaitForSeconds(0.1f);
-        transform.Translate(Vector3.forward * Time.fixedDeltaTime * 50f);
-    }
     private void LateUpdate()
     {
         if (Input.GetMouseButton(1))
