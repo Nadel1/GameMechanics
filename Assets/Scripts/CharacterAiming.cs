@@ -44,6 +44,7 @@ public class CharacterAiming : MonoBehaviour
 
         if (hooked)
         {
+
             aimLayer.weight = 1;
             
             lr.SetVertexCount(2);
@@ -52,10 +53,11 @@ public class CharacterAiming : MonoBehaviour
             currentDistance = Vector3.Distance(transform.position, Hook.position);
             transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position, Time.fixedDeltaTime * 10);
             GetComponent<Rigidbody>().useGravity = false;
-            if (currentDistance < 1)
+            if (currentDistance < 1||Input.GetMouseButtonUp(1))
             {
                 
                 weapon.ReturnHook();
+                hooked = false;
             }
         }
         else

@@ -8,9 +8,6 @@ public class CharacterJumping : MonoBehaviour
     public float jumpingForce = 4;
     private Rigidbody rb;
     private float origin;
-    private float distToGround;
-    private Vector3 startPos;
-    public float maxDistance = 5;
     private bool isjumping = false;
     private bool isGrounded;
 
@@ -18,7 +15,6 @@ public class CharacterJumping : MonoBehaviour
     {
         origin = secondsLeft;
         rb = GetComponent<Rigidbody>();
-        distToGround = GetComponent<Collider>().bounds.extents.y;
     }
 
     private void FixedUpdate()
