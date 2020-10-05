@@ -9,6 +9,10 @@ public class CharacterJumping : MonoBehaviour
     private Rigidbody rb;
     private float origin;
     private float distToGround;
+    private Vector3 startPos;
+    public float maxDistance = 5;
+    private bool isjumping = false;
+    private bool isGrounded;
 
     private void Start()
     {
@@ -17,24 +21,33 @@ public class CharacterJumping : MonoBehaviour
         distToGround = GetComponent<Collider>().bounds.extents.y;
     }
 
-    private bool isGrounded()
-    {
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
-    }
     private void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)&&isGrounded&&!isjumping)
         {
+            isjumping = true;
+            isGrounded = false;
             while (secondsLeft > 0)
             {
                 secondsLeft -= Time.deltaTime;
-                rb.AddForce(new Vector3(0, 1, 0)*jumpingForce, ForceMode.Acceleration);
+                rb.AddForce(new Vector3(0, 1, 0) * jumpingForce, ForceMode.Acceleration);
+
             }
         }
-        if (isGrounded())
+  
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag=="Environment")
         {
+            isGrounded = true;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            Debug.Log("grounded!");
+            isjumping = false;
             secondsLeft = origin;
         }
-        
     }
 }
