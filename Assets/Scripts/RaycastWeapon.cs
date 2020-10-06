@@ -16,7 +16,8 @@ public class RaycastWeapon : MonoBehaviour
 
     private GameObject hookedObj;
     Ray ray;
-    RaycastHit hitInfo;
+    public RaycastHit hitInfo;
+    
 
     private void Start()
     {

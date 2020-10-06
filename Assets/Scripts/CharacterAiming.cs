@@ -27,6 +27,7 @@ public class CharacterAiming : MonoBehaviour
     private Vector3 grapplePoint;
     public Transform gunTip, camera;
     private SpringJoint joint;
+    private Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +37,7 @@ public class CharacterAiming : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         distToGround = GetComponent<Collider>().bounds.extents.y;
         lr = GetComponent<LineRenderer>();
+        rb = GetComponent<Rigidbody>();
     }
 
 
@@ -59,26 +61,26 @@ public class CharacterAiming : MonoBehaviour
 
     void StartGrapple()
     {
-        transform.position = Vector3.MoveTowards(transform.position, Hook.transform.position,5);
-        grapplePoint = Hook.position;
+        //transform.position = Vector3.Lerp(transform.position, Hook.position, 0.3f);
+        grapplePoint = weapon.hitInfo.point;
             joint = this.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = grapplePoint;
 
             float distanceFromPoint = Vector3.Distance(this.transform.position, grapplePoint);
 
+      //  joint.connectedBody = Hook.GetComponent<Rigidbody>();
 
-            joint.maxDistance = distanceFromPoint * 0.8f;
+            joint.maxDistance = distanceFromPoint*0.8f ;
             joint.minDistance = distanceFromPoint * 0.25f;
-
 
             joint.spring = 4.5f;
             joint.damper = 7f;
             joint.massScale = 4.5f;
-        
-            
-        
-       
+
+
+
+
     }
 
     void DrawRope()
@@ -91,7 +93,10 @@ public class CharacterAiming : MonoBehaviour
 
     void StopGrapple()
     {
-        Destroy(joint);
+        SpringJoint[] joints = GetComponents<SpringJoint>();
+
+        foreach (SpringJoint obj in joints)
+            Destroy(obj);
         lr.positionCount = 0;
         lr.enabled = false;
         hooked = false;
