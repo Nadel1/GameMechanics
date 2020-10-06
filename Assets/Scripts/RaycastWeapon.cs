@@ -11,7 +11,7 @@ public class RaycastWeapon : MonoBehaviour
     public Transform raycastDest;
 
     public Transform Hook;
-    public CharacterAiming aiming;
+    private CharacterLocomotion aiming;
     public Transform hookOrigin;
 
     private GameObject hookedObj;
@@ -22,6 +22,7 @@ public class RaycastWeapon : MonoBehaviour
     private void Start()
     {
         Hook.position = hookOrigin.position;
+        aiming = GameObject.Find("Player").GetComponent<CharacterLocomotion>();
     }
     public void StartFiring()
     {
@@ -39,7 +40,7 @@ public class RaycastWeapon : MonoBehaviour
             Hook.transform.position = hitInfo.point;
             hookedObj = hitInfo.transform.gameObject;
             Hook.transform.parent = hookedObj.transform;
-            aiming.hooked = true;
+            aiming.SetHooked(true);
             isFiring = false;
         }
             
@@ -47,12 +48,12 @@ public class RaycastWeapon : MonoBehaviour
 
     public void StopFiring()
     {
-        aiming.hooked = false;
+        aiming.SetHooked(false);
     }
 
     public void ReturnHook()
     {
-        aiming.hooked = false;
+        aiming.SetHooked(false);
         Hook.position = hookOrigin.position;
         Hook.transform.parent = gameObject.transform;
     }

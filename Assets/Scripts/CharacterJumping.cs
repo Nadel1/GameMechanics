@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterJumping : MonoBehaviour
-{
+{/*
     public float secondsLeft = 0.5f;
     public float jumpingForce = 4;
     private Rigidbody rb;
@@ -33,17 +33,15 @@ public class CharacterJumping : MonoBehaviour
   
         
     }
-
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag=="Environment")
+        if (collision.gameObject.tag == "Environment")
         {
             isGrounded = true;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-
-            isjumping = false;
             secondsLeft = origin;
         }
     }
+    */
 }
