@@ -135,10 +135,12 @@ public class CharacterLocomotion : MonoBehaviour
 
     private void GrapplingHook()
     {
+        if(hooked)
+            StartGrapple();
         if (!hooked && Input.GetMouseButtonDown(0))
         {
             weapon.StartFiring();
-            StartGrapple();
+            
         }
         else
         {
@@ -147,27 +149,30 @@ public class CharacterLocomotion : MonoBehaviour
         }
     }
 
+
     void StartGrapple()
     {
 
         
         grapplePoint = weapon.hitInfo.point;
+
+        
         joint = this.gameObject.AddComponent<SpringJoint>();
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = grapplePoint;
 
         float distanceFromPoint = Vector3.Distance(this.transform.position, grapplePoint);
 
-        //  joint.connectedBody = Hook.GetComponent<Rigidbody>();
+        //joint.connectedBody = Hook.GetComponent<Rigidbody>();
 
         joint.maxDistance = distanceFromPoint * 0.8f;
         joint.minDistance = distanceFromPoint * 0.25f;
 
-        joint.spring = 4.5f;
+        joint.spring =20.5f;
         joint.damper = 7f;
         joint.massScale = 4.5f;
        
-
+        
 
     }
 
