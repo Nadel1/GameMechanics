@@ -41,7 +41,7 @@ public class CharacterJumping : MonoBehaviour
             isGrounded = true;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            Debug.Log("grounded!");
+
             isjumping = false;
             secondsLeft = origin;
         }
