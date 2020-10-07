@@ -152,7 +152,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     void StartGrapple()
     {
-
+        /*
         
         grapplePoint = weapon.hitInfo.point;
 
@@ -173,7 +173,7 @@ public class CharacterLocomotion : MonoBehaviour
         joint.massScale = 4.5f;
        
         
-
+    */
     }
 
     void DrawRope()
@@ -233,8 +233,8 @@ public class CharacterLocomotion : MonoBehaviour
         multiplier = grounded ? 1 : isRunning ? 2 : 0.5f;
         
 
-        rb.AddForce(transform.forward * input.y * moveSpeed*multiplier);
-        rb.AddForce(transform.right * input.x * moveSpeed*multiplier);
+        rb.AddForce(transform.forward * input.y * moveSpeed*multiplier*Time.deltaTime);
+        rb.AddForce(transform.right * input.x * moveSpeed*multiplier*Time.deltaTime);
     }
     private void Animate()
     {
