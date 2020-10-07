@@ -233,6 +233,7 @@ public class CharacterLocomotion : MonoBehaviour
         {
             isjumping = true;
             grounded = false;
+            animator.SetBool("jumping", true);
             while (secondsLeft > 0)
             {
                 secondsLeft -= Time.deltaTime;
@@ -280,6 +281,7 @@ public class CharacterLocomotion : MonoBehaviour
     {
         if (collision.gameObject.tag == "Environment")
         {
+            animator.SetBool("jumping", false);
             grounded = true;
             isjumping = false;
             rb.velocity = Vector3.zero;
