@@ -120,6 +120,8 @@ public class CharacterLocomotion : MonoBehaviour
         Turning();
         GrapplingHook();
         Animate();
+
+     
     }
 
     private void LateUpdate()
@@ -241,6 +243,7 @@ public class CharacterLocomotion : MonoBehaviour
             }
             secondsLeft = origin;
             
+            
         }
     }
 
@@ -257,6 +260,7 @@ public class CharacterLocomotion : MonoBehaviour
 
         int multiplierY;
         multiplierY = crouching ? 0 : 1;
+        multiplier = grounded ? 1 : 10;
         rb.AddForce(transform.forward * input.y * moveSpeed*100*multiplier*Time.fixedDeltaTime*multiplierY);
         rb.AddForce(transform.right * input.x * moveSpeed*100*multiplier*Time.fixedDeltaTime);
 
@@ -267,6 +271,13 @@ public class CharacterLocomotion : MonoBehaviour
         }
         else
             rb.drag = 1;
+
+        if (!grounded && !isjumping)
+        {
+            animator.SetBool("falling", true);
+            Debug.Log("falling");
+        }
+
     }
 
     private void Animate()
@@ -281,6 +292,7 @@ public class CharacterLocomotion : MonoBehaviour
     {
         if (collision.gameObject.tag == "Environment")
         {
+            animator.SetBool("falling", false);
             animator.SetBool("jumping", false);
             grounded = true;
             isjumping = false;
