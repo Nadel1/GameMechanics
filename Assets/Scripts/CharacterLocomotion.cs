@@ -62,6 +62,8 @@ public class CharacterLocomotion : MonoBehaviour
 
     private float animationSpeed = 1;
 
+    private bool gliding = false;
+
     //checks wether or not the player is hooked
     private bool hooked;
     private float distToGround;
@@ -211,14 +213,17 @@ public class CharacterLocomotion : MonoBehaviour
             isRunning = true;
         if (Input.GetKeyUp(KeyCode.LeftShift))
             isRunning = false;
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (grounded&&Input.GetKey(KeyCode.LeftControl))
         {
             crouching = true;
-            Debug.Log(crouching);
         }
            
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (grounded&&Input.GetKeyUp(KeyCode.LeftControl))
             crouching = false;
+        if (!grounded && Input.GetKey(KeyCode.LeftControl))
+            gliding = true;
+        if ((!grounded && Input.GetKeyUp(KeyCode.LeftControl))||grounded)
+            gliding = false;
 
     }
 
@@ -241,11 +246,11 @@ public class CharacterLocomotion : MonoBehaviour
     private void Movement()
     {
         rb.AddForce(Vector3.down * Time.deltaTime * 10);
-        animationSpeed = isRunning ? 2 : 1;
+        animationSpeed = isRunning ? 1.5f : 1;
         if (crouching)
         {
             //rb.velocity += rb.transform.forward * 10;
-            rb.AddForce(Vector3.down * Time.deltaTime * 3000,ForceMode.Acceleration);
+            rb.AddForce(Vector3.down * Time.deltaTime * 30000,ForceMode.Acceleration);
             rb.AddForce(transform.forward * 10000*Time.deltaTime,ForceMode.Acceleration);
         }
 
@@ -253,6 +258,14 @@ public class CharacterLocomotion : MonoBehaviour
         multiplierY = crouching ? 0 : 1;
         rb.AddForce(transform.forward * input.y * moveSpeed*100*multiplier*Time.fixedDeltaTime*multiplierY);
         rb.AddForce(transform.right * input.x * moveSpeed*100*multiplier*Time.fixedDeltaTime);
+
+        if (gliding)
+        {
+            rb.drag = (10 - Vector3.Dot(mainCamera.transform.forward, Vector3.down) * 5);
+            Debug.Log(Vector3.Dot(mainCamera.transform.forward, Vector3.down));
+        }
+        else
+            rb.drag = 1;
     }
 
     private void Animate()
