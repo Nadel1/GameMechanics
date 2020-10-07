@@ -75,6 +75,7 @@ public class CharacterLocomotion : MonoBehaviour
     //used for the grapple mechanic
     private SpringJoint joint;
 
+    private bool crouching = false;
 
     private bool isRunning = false;
     //original amount of seconds left so that each jump is being accelerated for the same amount of time
@@ -103,13 +104,13 @@ public class CharacterLocomotion : MonoBehaviour
     }
     private void Update()
     {
-
+        GetInput();
     }
     // Update is called once per frame
     void FixedUpdate()
     {
         
-        GetInput();
+        
         Movement();
         Jumping();
         Turning();
@@ -152,7 +153,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     void StartGrapple()
     {
-        /*
+        
         
         grapplePoint = weapon.hitInfo.point;
 
@@ -163,17 +164,15 @@ public class CharacterLocomotion : MonoBehaviour
 
         float distanceFromPoint = Vector3.Distance(this.transform.position, grapplePoint);
 
-        //joint.connectedBody = Hook.GetComponent<Rigidbody>();
+       // joint.connectedBody = Hook.GetComponent<Rigidbody>();
 
         joint.maxDistance = distanceFromPoint * 0.8f;
         joint.minDistance = distanceFromPoint * 0.25f;
 
-        joint.spring =20.5f;
-        joint.damper = 7f;
-        joint.massScale = 4.5f;
-       
-        
-    */
+        joint.spring =1000f;
+        joint.damper = 60f;
+        joint.massScale = 10f;
+   
     }
 
     void DrawRope()
@@ -208,6 +207,14 @@ public class CharacterLocomotion : MonoBehaviour
             isRunning = true;
         if (Input.GetKeyUp(KeyCode.LeftShift))
             isRunning = false;
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            crouching = true;
+            Debug.Log(crouching);
+        }
+           
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+            crouching = false;
 
     }
 
@@ -231,10 +238,18 @@ public class CharacterLocomotion : MonoBehaviour
     {
         rb.AddForce(Vector3.down * Time.deltaTime * 10);
         multiplier = grounded ? 1 : isRunning ? 2 : 0.5f;
-        
 
-        rb.AddForce(transform.forward * input.y * moveSpeed*multiplier*Time.deltaTime);
-        rb.AddForce(transform.right * input.x * moveSpeed*multiplier*Time.deltaTime);
+        if (crouching)
+        {
+            //rb.velocity += rb.transform.forward * 10;
+            rb.AddForce(Vector3.down * Time.deltaTime * 3000,ForceMode.Acceleration);
+            rb.AddForce(transform.forward * 10000*Time.deltaTime,ForceMode.Acceleration);
+        }
+
+        int multiplierY;
+        multiplierY = crouching ? 0 : 1;
+        rb.AddForce(transform.forward * input.y * moveSpeed*100*multiplier*Time.fixedDeltaTime*multiplierY);
+        rb.AddForce(transform.right * input.x * moveSpeed*100*multiplier*Time.fixedDeltaTime);
     }
     private void Animate()
     {
