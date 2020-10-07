@@ -60,6 +60,8 @@ public class CharacterLocomotion : MonoBehaviour
 
     float currentDistance;
 
+    private float animationSpeed = 1;
+
     //checks wether or not the player is hooked
     private bool hooked;
     private float distToGround;
@@ -157,7 +159,8 @@ public class CharacterLocomotion : MonoBehaviour
         
         grapplePoint = weapon.hitInfo.point;
 
-        
+        rb.drag = 20;
+        rb.angularDrag = 20;
         joint = this.gameObject.AddComponent<SpringJoint>();
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = grapplePoint;
@@ -186,7 +189,8 @@ public class CharacterLocomotion : MonoBehaviour
     void StopGrapple()
     {
         SpringJoint[] joints = GetComponents<SpringJoint>();
-
+        rb.drag = 1;
+        rb.angularDrag = 1;
         foreach (SpringJoint obj in joints)
             Destroy(obj);
         lr.positionCount = 0;
@@ -237,8 +241,7 @@ public class CharacterLocomotion : MonoBehaviour
     private void Movement()
     {
         rb.AddForce(Vector3.down * Time.deltaTime * 10);
-        multiplier = grounded ? 1 : isRunning ? 2 : 0.5f;
-
+        animationSpeed = isRunning ? 2 : 1;
         if (crouching)
         {
             //rb.velocity += rb.transform.forward * 10;
@@ -251,10 +254,13 @@ public class CharacterLocomotion : MonoBehaviour
         rb.AddForce(transform.forward * input.y * moveSpeed*100*multiplier*Time.fixedDeltaTime*multiplierY);
         rb.AddForce(transform.right * input.x * moveSpeed*100*multiplier*Time.fixedDeltaTime);
     }
+
     private void Animate()
     {
         animator.SetFloat("InputX", input.x);
         animator.SetFloat("InputY", input.y);
+        animator.speed = animationSpeed;
+        
     }
 
     private void OnCollisionEnter(Collision collision)
