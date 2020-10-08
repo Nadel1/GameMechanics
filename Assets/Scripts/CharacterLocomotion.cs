@@ -301,6 +301,17 @@ public class CharacterLocomotion : MonoBehaviour
             secondsLeft = origin;
         }
     }
+/*
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Environment")
+        {
+            animator.SetBool("falling", true);
+            grounded = false;
+
+        }
+    }
+    */
 
     public void SetHooked(bool hooked)
     {
